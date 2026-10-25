@@ -23,10 +23,10 @@ export default async function LoginPage({ params, searchParams }: { params: Prom
               {errore === "troppi" ? a.tooMany : a.wrongCredentials}
             </p>
           )}
-          <label htmlFor="email" className="mt-5 block font-semibold">
-            {a.email}
+          <label htmlFor="login" className="mt-5 block font-semibold">
+            {a.loginName}
           </label>
-          <input id="email" name="email" type="email" autoComplete="username" required className="field mt-1" />
+          <input id="login" name="login" type="text" autoComplete="username" autoCapitalize="none" spellCheck={false} required className="field mt-1" />
           <label htmlFor="password" className="mt-4 block font-semibold">
             {a.password}
           </label>
@@ -42,8 +42,8 @@ export default async function LoginPage({ params, searchParams }: { params: Prom
             <p className="font-bold text-magenta-strong">{a.demoLogins}</p>
             <ul className="mt-2 space-y-1">
               {DEMO_LOGINS.map((l) => (
-                <li key={l.email}>
-                  {l.label[locale]}: <code className="font-semibold">{l.email}</code>
+                <li key={l.login}>
+                  {l.label[locale]}: <code className="font-semibold">{l.login}</code>
                 </li>
               ))}
             </ul>

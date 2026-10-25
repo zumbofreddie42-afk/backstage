@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { newId } from "@/lib/domain";
 import { isLocale, type Locale } from "@/lib/i18n";
+import { matchesLogin } from "@/lib/usernames";
 import { canSeeStudent } from "@/server/access";
 import { endUserSession, getCurrentAccount, startUserSession } from "@/server/auth";
 import { getSiteMode } from "@/server/config";
@@ -26,9 +27,9 @@ function localeOf(formData: FormData): Locale {
 export async function login(formData: FormData) {
   const locale = localeOf(formData);
   if (!allow(await clientKey("area-login"), 10, 15 * 60_000)) go(`/${locale}/area/login?errore=troppi`);
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const loginName = String(formData.get("login") ?? "");
   const password = String(formData.get("password") ?? "");
-  const [account] = await getStore().list("accounts", (a) => a.email.toLowerCase() === email);
+  const [account] = await getStore().list("accounts", (a) => matchesLogin(a, loginName));
   const valid =
     account && account.active && !(account.demo && getSiteMode() === "live") && verifyPassword(password, account.passwordHash);
   if (!account || !valid) go(`/${locale}/area/login?errore=1`);

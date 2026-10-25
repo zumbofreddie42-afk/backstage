@@ -29,13 +29,16 @@ import {
   setPaymentStatus,
   toggleAccount,
   unlinkGuardian,
+  updateLogin,
   updateStudent,
 } from "../../../actions";
 
 const ERRORS: Record<string, string> = {
   "1": "Controlla i dati inseriti.",
   email: "Email non valida.",
-  usata: "Questa email è già usata da un altro account.",
+  usata: "Questo nome utente o questa email sono già usati da un altro account.",
+  username: "Nome utente non valido: almeno 3 caratteri tra lettere minuscole, numeri, punto e trattino.",
+  classroom: "Il link deve essere di Google Classroom (https://classroom.google.com/…).",
   lezione: "Data o durata della lezione non valide.",
   data: "Data non valida.",
   appuntamento: "Data/ora o durata non valide.",
@@ -139,7 +142,14 @@ export default async function StudentDetail({ params, searchParams }: { params: 
                 <input type="checkbox" name="active" defaultChecked={student.active} className="h-4 w-4 accent-primary" /> Attivo
               </label>
             </div>
-            <Field label="Note interne (solo personale)" htmlFor="staffNotes" className="sm:col-span-2">
+            <Field label="Link della classe su Google Classroom" htmlFor="classroomUrl" hint="Lo studente lo trova in evidenza nella sua area." className="sm:col-span-2">
+              <input id="classroomUrl" name="classroomUrl" type="url" defaultValue={student.classroomUrl ?? ""} placeholder="https://classroom.google.com/c/…" className="field" />
+            </Field>
+            <Field label="Codice del corso Classroom" htmlFor="classroomCode">
+              <input id="classroomCode" name="classroomCode" defaultValue={student.classroomCode ?? ""} maxLength={40} className="field" />
+            </Field>
+            <div />
+            <Field label="Note interne (visibili solo a te)" htmlFor="staffNotes" className="sm:col-span-2">
               <textarea id="staffNotes" name="staffNotes" rows={3} defaultValue={student.staffNotes} className="field" />
             </Field>
             <div>
@@ -148,17 +158,36 @@ export default async function StudentDetail({ params, searchParams }: { params: 
           </form>
         </Panel>
 
-        <Panel title="Accessi all'area riservata" id="accessi">
+        <Panel title="Credenziali e accessi" id="accessi">
+          {own.length === 0 && (
+            <p className="mb-4 rounded-xl bg-warn-soft p-3 text-sm font-semibold text-warn">Questo studente non ha ancora le sue credenziali: creale qui sotto.</p>
+          )}
           <ul className="space-y-3">
             {[...own, ...guardians].map((a) => (
               <li key={a.id} className="rounded-xl bg-muted p-3">
                 <p className="font-semibold">
-                  {a.name} <span className="font-normal text-muted-foreground">· {a.email}</span>{" "}
+                  {a.name} <span className="font-normal text-muted-foreground">· {a.username || "—"}{a.email && ` · ${a.email}`}</span>{" "}
                   <Badge tone={a.role === "student" ? "violet" : "magenta"}>{a.role === "student" ? "studente" : "genitore/tutore"}</Badge>{" "}
                   {!a.active && <Badge tone="gray">disattivato</Badge>}
                   {a.mustChangePassword && <Badge tone="warn">password temporanea</Badge>}
                 </p>
                 <p className="text-xs text-muted-foreground">Ultimo accesso: {a.lastLoginAt ? formatDateTime(a.lastLoginAt) : "mai"}</p>
+                <details className="mt-2">
+                  <summary className="cursor-pointer text-sm font-semibold text-primary">Modifica nome utente o email</summary>
+                  <form action={updateLogin} className="mt-2 grid gap-2 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+                    <input type="hidden" name="accountId" value={a.id} />
+                    <input type="hidden" name="back" value={back} />
+                    <Field label="Nome utente" htmlFor={`u-${a.id}`}>
+                      <input id={`u-${a.id}`} name="username" defaultValue={a.username} required className="field py-1.5" />
+                    </Field>
+                    <Field label={a.role === "guardian" ? "Email" : "Email (facoltativa)"} htmlFor={`e-${a.id}`}>
+                      <input id={`e-${a.id}`} name="email" type="email" defaultValue={a.email} required={a.role === "guardian"} className="field py-1.5" />
+                    </Field>
+                    <SubmitButton variant="outline" small>
+                      Salva
+                    </SubmitButton>
+                  </form>
+                </details>
                 <div className="mt-2 flex flex-wrap gap-2">
                   <form action={resetPassword}>
                     <input type="hidden" name="accountId" value={a.id} />
@@ -190,15 +219,15 @@ export default async function StudentDetail({ params, searchParams }: { params: 
           <div className="mt-5 grid gap-5 sm:grid-cols-2">
             {own.length === 0 && (
               <form action={createStudentAccount} className="space-y-3 rounded-xl border border-border p-4">
-                <p className="font-semibold">Accesso per lo studente</p>
+                <p className="font-semibold">Credenziali dello studente</p>
                 <Hidden studentId={id} />
-                <Field label="Email" htmlFor="s-email">
-                  <input id="s-email" name="email" type="email" required className="field" />
+                <Field label="Nome utente (vuoto = automatico)" htmlFor="s-username">
+                  <input id="s-username" name="username" maxLength={40} className="field" />
                 </Field>
-                <Field label="Nome mostrato" htmlFor="s-name">
-                  <input id="s-name" name="name" defaultValue={student.displayName} className="field" />
+                <Field label="Email (facoltativa)" htmlFor="s-email">
+                  <input id="s-email" name="email" type="email" className="field" />
                 </Field>
-                <SubmitButton small>Crea accesso</SubmitButton>
+                <SubmitButton small>Crea credenziali</SubmitButton>
               </form>
             )}
             <form action={linkGuardian} className="space-y-3 rounded-xl border border-border p-4">
@@ -227,9 +256,6 @@ export default async function StudentDetail({ params, searchParams }: { params: 
             <Field label="Argomento" htmlFor="l-topic" className="sm:col-span-2">
               <input id="l-topic" name="topic" maxLength={200} className="field" />
             </Field>
-            <Field label="Insegnante" htmlFor="l-teacher">
-              <input id="l-teacher" name="teacher" maxLength={80} className="field" />
-            </Field>
             <Field label="Nota visibile allo studente" htmlFor="l-note" className="sm:col-span-2">
               <input id="l-note" name="note" maxLength={500} className="field" />
             </Field>
@@ -242,7 +268,6 @@ export default async function StudentDetail({ params, searchParams }: { params: 
               <li key={l.id} className="flex items-start justify-between gap-3 py-2">
                 <span>
                   <b>{formatDay(l.date)}</b> · {l.minutes} min · {l.topic || "—"}
-                  {l.teacher && <span className="text-muted-foreground"> · {l.teacher}</span>}
                 </span>
                 <Delete kind="lessons" id={l.id} back={`${back}#lezioni`} />
               </li>
@@ -484,7 +509,7 @@ export default async function StudentDetail({ params, searchParams }: { params: 
                     <a href={`/api/files/${c.fileId}`} target="_blank" className="font-semibold text-primary underline">
                       {c.title}
                     </a>{" "}
-                    · {formatDay(c.uploadedAt)} · caricata da {c.uploadedBy === "guardian" ? "genitore" : c.uploadedBy === "student" ? "studente" : "personale"}{" "}
+                    · {formatDay(c.uploadedAt)} · caricata da {c.uploadedBy === "guardian" ? "genitore" : c.uploadedBy === "student" ? "studente" : c.uploadedBy === "public" ? "modulo del sito" : "te"}{" "}
                     <Badge tone={c.status === "checked" ? "ok" : "gray"}>{c.status === "checked" ? "verificata" : "ricevuta"}</Badge>
                   </span>
                   <span className="flex gap-2">
@@ -530,7 +555,7 @@ export default async function StudentDetail({ params, searchParams }: { params: 
                   </details>
                   <form action={replyShare} className="mt-3 space-y-2">
                     <input type="hidden" name="id" value={s.id} />
-                    <Field label="Risposta dell'insegnante (visibile nell'area dello studente)" htmlFor={`rep-${s.id}`}>
+                    <Field label="La tua risposta (visibile nell'area dello studente)" htmlFor={`rep-${s.id}`}>
                       <textarea id={`rep-${s.id}`} name="reply" rows={2} defaultValue={s.teacherReply} maxLength={3000} className="field" />
                     </Field>
                     <SubmitButton small>Salva risposta</SubmitButton>

@@ -5,7 +5,7 @@ import { buttonClass } from "@/components/ui";
 import { getStaffSession, isDevPassword, staffLoginAvailable, staffRoleForPassword, startStaffSession } from "@/server/auth";
 import { allow, clientKey } from "@/server/rate-limit";
 
-export const metadata: Metadata = { title: "Accesso personale" };
+export const metadata: Metadata = { title: "Accesso scuola" };
 
 async function login(formData: FormData) {
   "use server";
@@ -23,7 +23,7 @@ export default async function StaffLoginPage({ searchParams }: { searchParams: P
     <main className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-ink to-primary px-4">
       <form action={login} className="w-full max-w-sm rounded-[2rem] bg-white p-7">
         <Image src="/brand/backstage-logo.jpg" alt="Backstage Online Languages" width={150} height={150} className="h-16 w-16 rounded-full" />
-        <h1 className="mt-4 text-3xl font-extrabold text-ink">Area personale</h1>
+        <h1 className="mt-4 text-3xl font-extrabold text-ink">Area di Christina</h1>
         <p className="mt-1 text-muted-foreground">Pannello di gestione di Backstage</p>
         {errore && (
           <p role="alert" className="mt-4 rounded-xl bg-danger-soft p-3 text-sm font-semibold text-danger">

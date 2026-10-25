@@ -8,6 +8,7 @@ import { isAgeBand, type SiteContent } from "@/lib/content/schema";
 import { isAmazonUrl } from "@/lib/content/visibility";
 import { newId, type PaymentStatus, type ReminderKind } from "@/lib/domain";
 import { isIsoDate, romeLocalToIso } from "@/lib/time";
+import { isClassroomUrl, matchesLogin, uniqueUsername, USERNAME_RE } from "@/lib/usernames";
 import { endStaffSession, requireStaff } from "@/server/auth";
 import { hashPassword, temporaryPassword } from "@/server/passwords";
 import { runReminders } from "@/server/reminders";
@@ -46,11 +47,58 @@ export async function logoutStaff() {
 
 // ---------- Students ----------
 
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+/** Classroom fields of the student form: only classroom.google.com links are kept. */
+function classroomFields(fd: FormData) {
+  const url = str(fd, "classroomUrl", 500);
+  return { classroomUrl: isClassroomUrl(url) ? url : "", classroomCode: str(fd, "classroomCode", 40) };
+}
+
+/** Problem with a login name, or null when it can be used by `exceptId` (or by a new account). */
+async function loginProblem(username: string, email: string, exceptId?: string): Promise<string | null> {
+  if (!USERNAME_RE.test(username)) return "username";
+  if (email && !EMAIL_RE.test(email)) return "email";
+  const others = await getStore().list("accounts", (a) => a.id !== exceptId);
+  if (others.some((a) => matchesLogin(a, username) || (email && matchesLogin(a, email)))) return "usata";
+  return null;
+}
+
+async function newAccount(fields: { role: "student" | "guardian"; name: string; username: string; email: string; studentId: string | null; guardianOf: string[]; locale: string }) {
+  const password = temporaryPassword();
+  await getStore().insert("accounts", {
+    id: newId("acc"),
+    ...fields,
+    locale: fields.locale === "en" ? "en" : "it",
+    passwordHash: hashPassword(password),
+    mustChangePassword: true,
+    active: true,
+    demo: false,
+    createdAt: new Date().toISOString(),
+    lastLoginAt: null,
+  });
+  return password;
+}
+
+function credentialsMessage(who: string, username: string, email: string, password: string) {
+  return `Credenziali di ${who} — nome utente: ${username}${email ? ` (oppure ${email})` : ""} · password temporanea: ${password}. Comunicale di persona: al primo accesso la password va cambiata. Questo messaggio non verrà più mostrato.`;
+}
+
+async function freeUsername(displayName: string) {
+  const accounts = await getStore().list("accounts");
+  return uniqueUsername(displayName, accounts.map((a) => a.username ?? ""));
+}
+
+/** Every new student gets their own credentials right away (email optional). */
 export async function createStudent(fd: FormData) {
   await requireStaff();
   const displayName = str(fd, "displayName", 80);
   const ageBand = str(fd, "ageBand");
+  const email = str(fd, "email", 200).toLowerCase();
   if (!displayName || !isAgeBand(ageBand)) go("/staff/studenti?errore=1");
+  const username = await freeUsername(displayName);
+  const problem = await loginProblem(username, email);
+  if (problem) go(`/staff/studenti?errore=${problem}`);
   const id = newId("stu");
   await getStore().insert("students", {
     id,
@@ -59,10 +107,13 @@ export async function createStudent(fd: FormData) {
     level: str(fd, "level", 20),
     minor: fd.get("minor") === "on" || ageBand !== "adults",
     active: true,
+    ...classroomFields(fd),
     staffNotes: str(fd, "staffNotes", 2000),
     demo: false,
     createdAt: new Date().toISOString(),
   });
+  const password = await newAccount({ role: "student", name: displayName, username, email, studentId: id, guardianOf: [], locale: str(fd, "locale") });
+  await flash(credentialsMessage(displayName, username, email, password));
   go(`/staff/studenti/${id}`);
 }
 
@@ -71,48 +122,34 @@ export async function updateStudent(fd: FormData) {
   const id = str(fd, "id");
   const ageBand = str(fd, "ageBand");
   if (!isAgeBand(ageBand)) go(`/staff/studenti/${id}?errore=1`);
+  const url = str(fd, "classroomUrl", 500);
+  if (url && !isClassroomUrl(url)) go(`/staff/studenti/${id}?errore=classroom#profilo`);
   await getStore().update("students", id, {
     displayName: str(fd, "displayName", 80) || "Studente",
     ageBand,
     level: str(fd, "level", 20),
     minor: fd.get("minor") === "on",
     active: fd.get("active") === "on",
+    ...classroomFields(fd),
     staffNotes: str(fd, "staffNotes", 2000),
   });
   await flash("Profilo aggiornato.");
   go(`/staff/studenti/${id}`);
 }
 
-async function emailTaken(email: string, exceptId?: string) {
-  return (await getStore().list("accounts", (a) => a.email.toLowerCase() === email.toLowerCase() && a.id !== exceptId)).length > 0;
-}
-
+/** For students created before credentials became automatic. */
 export async function createStudentAccount(fd: FormData) {
   await requireStaff();
   const studentId = str(fd, "studentId");
   const email = str(fd, "email", 200).toLowerCase();
   const back = `/staff/studenti/${studentId}`;
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) go(`${back}?errore=email`);
-  if (await emailTaken(email)) go(`${back}?errore=usata`);
   const student = await getStore().get("students", studentId);
   if (!student) go("/staff/studenti");
-  const password = temporaryPassword();
-  await getStore().insert("accounts", {
-    id: newId("acc"),
-    role: "student",
-    name: str(fd, "name", 80) || student.displayName,
-    email,
-    passwordHash: hashPassword(password),
-    mustChangePassword: true,
-    active: true,
-    studentId,
-    guardianOf: [],
-    locale: str(fd, "locale") === "en" ? "en" : "it",
-    demo: false,
-    createdAt: new Date().toISOString(),
-    lastLoginAt: null,
-  });
-  await flash(`Accesso creato per ${email}. Password temporanea: ${password} — comunicala allo studente: dovrà cambiarla al primo accesso.`);
+  const username = str(fd, "username", 40).toLowerCase() || (await freeUsername(student.displayName));
+  const problem = await loginProblem(username, email);
+  if (problem) go(`${back}?errore=${problem}#accessi`);
+  const password = await newAccount({ role: "student", name: student.displayName, username, email, studentId, guardianOf: [], locale: str(fd, "locale") });
+  await flash(credentialsMessage(student.displayName, username, email, password));
   go(back);
 }
 
@@ -121,32 +158,36 @@ export async function linkGuardian(fd: FormData) {
   const studentId = str(fd, "studentId");
   const email = str(fd, "email", 200).toLowerCase();
   const back = `/staff/studenti/${studentId}`;
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) go(`${back}?errore=email`);
+  if (!EMAIL_RE.test(email)) go(`${back}?errore=email#accessi`);
   const store = getStore();
-  const [existing] = await store.list("accounts", (a) => a.email.toLowerCase() === email);
+  const [existing] = await store.list("accounts", (a) => matchesLogin(a, email));
   if (existing) {
-    if (existing.role !== "guardian") go(`${back}?errore=usata`);
+    if (existing.role !== "guardian") go(`${back}?errore=usata#accessi`);
     await store.update("accounts", existing.id, { guardianOf: [...new Set([...existing.guardianOf, studentId])] });
     await flash(`${email} ora vede anche questo studente.`);
     go(back);
   }
-  const password = temporaryPassword();
-  await store.insert("accounts", {
-    id: newId("acc"),
-    role: "guardian",
-    name: str(fd, "name", 80) || "Genitore",
-    email,
-    passwordHash: hashPassword(password),
-    mustChangePassword: true,
-    active: true,
-    studentId: null,
-    guardianOf: [studentId],
-    locale: str(fd, "locale") === "en" ? "en" : "it",
-    demo: false,
-    createdAt: new Date().toISOString(),
-    lastLoginAt: null,
-  });
-  await flash(`Accesso genitore/tutore creato per ${email}. Password temporanea: ${password} — dovrà cambiarla al primo accesso.`);
+  const name = str(fd, "name", 80) || "Genitore";
+  const username = await freeUsername(name);
+  const password = await newAccount({ role: "guardian", name, username, email, studentId: null, guardianOf: [studentId], locale: str(fd, "locale") });
+  await flash(credentialsMessage(name, username, email, password));
+  go(back);
+}
+
+/** Changes username and/or email of an account. */
+export async function updateLogin(fd: FormData) {
+  await requireStaff();
+  const accountId = str(fd, "accountId");
+  const back = str(fd, "back") || "/staff/studenti";
+  const username = str(fd, "username", 40).toLowerCase();
+  const email = str(fd, "email", 200).toLowerCase();
+  const account = await getStore().get("accounts", accountId);
+  if (!account) go(back);
+  if (account.role === "guardian" && !email) go(`${back}?errore=email#accessi`);
+  const problem = await loginProblem(username, email, accountId);
+  if (problem) go(`${back}?errore=${problem}#accessi`);
+  await getStore().update("accounts", accountId, { username, email });
+  await flash("Credenziali aggiornate.");
   go(back);
 }
 
@@ -167,7 +208,7 @@ export async function resetPassword(fd: FormData) {
   if (!account) go(back);
   const password = temporaryPassword();
   await getStore().update("accounts", accountId, { passwordHash: hashPassword(password), mustChangePassword: true });
-  await flash(`Nuova password temporanea per ${account.email}: ${password}`);
+  await flash(`Nuova password temporanea per ${account.username || account.email}: ${password} — al primo accesso andrà cambiata.`);
   go(back);
 }
 
@@ -188,7 +229,7 @@ export async function addLesson(fd: FormData) {
   const date = str(fd, "date");
   const minutes = Math.round(Number(fd.get("minutes")));
   if (!isIsoDate(date) || !(minutes > 0 && minutes <= 600)) go(`/staff/studenti/${studentId}?errore=lezione#lezioni`);
-  await getStore().insert("lessons", { id: newId("les"), studentId, date, minutes, topic: str(fd, "topic", 200), teacher: str(fd, "teacher", 80), note: str(fd, "note", 500) });
+  await getStore().insert("lessons", { id: newId("les"), studentId, date, minutes, topic: str(fd, "topic", 200), teacher: "Christina", note: str(fd, "note", 500) });
   go(`/staff/studenti/${studentId}#lezioni`);
 }
 

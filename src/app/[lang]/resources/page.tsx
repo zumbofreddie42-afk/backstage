@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ResourceLibrary } from "@/components/resource-library";
-import { Container, Notice, PageHero, SectionHeading } from "@/components/ui";
+import { Container, LinkButton, Notice, PageHero, SectionHeading } from "@/components/ui";
 import { visibleBooks, visibleResources } from "@/lib/content/visibility";
 import { t } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
@@ -29,6 +29,12 @@ export default async function ResourcesPage({ params }: { params: Promise<{ lang
     <>
       <PageHero eyebrow={d.nav.resources} title={d.resources.title} intro={d.resources.intro} />
       <Container className="py-16">
+        <div className="mb-8 flex flex-col gap-3 rounded-2xl border-2 border-primary/30 bg-lavender p-5 sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-semibold text-ink">{d.resources.classroomNote}</p>
+          <LinkButton href={`/${locale}/area`} className="shrink-0">
+            {d.cta.studentArea}
+          </LinkButton>
+        </div>
         {resources.length > 0 ? (
           <ResourceLibrary
             items={resources}

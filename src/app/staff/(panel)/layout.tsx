@@ -24,7 +24,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
             <Image src="/brand/backstage-logo.jpg" alt="" width={150} height={150} className="h-10 w-10 rounded-full" />
             <span className="font-display font-extrabold leading-tight">
               Backstage
-              <span className="block text-xs font-semibold text-ink-muted">{session.role === "admin" ? "Amministrazione" : "Insegnante"}</span>
+              <span className="block text-xs font-semibold text-ink-muted">Area di Christina</span>
             </span>
           </Link>
           <form action={logoutStaff} className="lg:mt-4">

@@ -10,8 +10,8 @@ import { getStore } from "@/server/store";
 /**
  * Two separate sessions in signed, httpOnly cookies:
  * - students and guardians (accounts created by staff, scrypt passwords);
- * - school staff: "admin" (ADMIN_PASSWORD: everything, including payments and settings) and
- *   "teacher" (TEACHER_PASSWORD, optional: lessons, progress, homework, reminders, tutor shares).
+ * - the school's management area (ADMIN_PASSWORD): Christina is the only person working at the school.
+ *   The "teacher" role is kept in the types but no longer has a password.
  * In local development without ADMIN_PASSWORD the staff password is "anteprima".
  */
 export type StaffRole = "admin" | "teacher";
@@ -83,8 +83,6 @@ const cookieOptions = (hours: number) => ({
 export function staffRoleForPassword(password: string): StaffRole | null {
   const admin = adminPassword();
   if (admin && safeEqual(password, admin)) return "admin";
-  const teacher = process.env.TEACHER_PASSWORD;
-  if (teacher && safeEqual(password, teacher)) return "teacher";
   return null;
 }
 

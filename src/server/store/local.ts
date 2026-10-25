@@ -16,7 +16,7 @@ import type { FileBlob, Store } from "./types";
  * Bump SEED_VERSION when src/lib/content/seed.ts or the demo data change: the stored content is
  * reset to the new seed (private records are kept).
  */
-export const SEED_VERSION = 1;
+export const SEED_VERSION = 3;
 
 type Records = { [K in CollectionName]: Collections[K][] };
 type FileShape = { seedVersion: number; content: SiteContent; records: Records };
@@ -25,6 +25,10 @@ export const DATA_DIR = path.join(process.cwd(), ".data");
 const DATA_FILE = path.join(DATA_DIR, "backstage.json");
 const PUBLIC_DIR = path.join(DATA_DIR, "public");
 const PRIVATE_DIR = path.join(DATA_DIR, "private");
+
+function isDemoRecord(r: { id: string; studentId?: string | null }): boolean {
+  return r.id.includes("_demo_") || Boolean(r.studentId?.startsWith("stu_demo_"));
+}
 
 function emptyRecords(): Records {
   return Object.fromEntries(COLLECTIONS.map((c) => [c, []])) as unknown as Records;
@@ -52,7 +56,8 @@ export class LocalStore implements Store {
       if (parsed.seedVersion !== SEED_VERSION) {
         const fresh = this.fresh();
         const kept = Object.fromEntries(
-          COLLECTIONS.map((c) => [c, [...(parsed.records?.[c] ?? []).filter((r) => !("demo" in r && r.demo)), ...fresh.records[c]]]),
+          // Demo records (ids containing "_demo_") are replaced by the new ones; real records are kept.
+          COLLECTIONS.map((c) => [c, [...(parsed.records?.[c] ?? []).filter((r) => !isDemoRecord(r)), ...fresh.records[c]]]),
         ) as unknown as Records;
         return { ...fresh, records: kept };
       }

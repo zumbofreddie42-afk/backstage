@@ -18,7 +18,7 @@ export function privacySections(c: SiteContent, locale: Locale): { title: string
         title: "AI English Tutor",
         text: "Messages written in the tutor are sent to an artificial intelligence service provider ({{PROVIDER: Anthropic, PBC — to be confirmed in the data processing agreement}}) only to generate the answer. Email addresses and phone numbers are automatically removed before sending. Conversations are not saved by the website unless the student chooses to share one with the teacher. Do not write personal data in the tutor.",
       },
-      { title: "Who can see the data", text: "Only authorised Backstage staff. Each student sees only their own data; a parent or guardian sees only the data of the students linked to them. Data is never published on the website." },
+      { title: "Who can see the data", text: "Only Christina Back, who runs the school and teaches all the courses. Each student sees only their own data; a parent or guardian sees only the data of the students linked to them. Data is never published on the website." },
       { title: "Retention", text: "{{RETENTION PERIODS}}" },
       { title: "Your rights", text: `You can ask to access, correct or delete your data, or object to its processing, by writing to ${l.privacyEmail}. You can also lodge a complaint with the Italian Data Protection Authority (Garante per la protezione dei dati personali).` },
       ...(t(l.privacyExtra, locale) ? [{ title: "Further information", text: t(l.privacyExtra, locale) }] : []),
@@ -34,7 +34,7 @@ export function privacySections(c: SiteContent, locale: Locale): { title: string
       title: "AI English Tutor",
       text: "I messaggi scritti nel tutor sono inviati a un fornitore di servizi di intelligenza artificiale ({{FORNITORE: Anthropic, PBC — da confermare nell'accordo di trattamento dati}}) solo per generare la risposta. Indirizzi email e numeri di telefono vengono rimossi automaticamente prima dell'invio. Il sito non salva le conversazioni, salvo quando lo studente sceglie di condividerne una con l'insegnante. Non scrivere dati personali nel tutor.",
     },
-    { title: "Chi vede i dati", text: "Solo il personale autorizzato di Backstage. Ogni studente vede soltanto i propri dati; un genitore o tutore vede soltanto i dati degli studenti collegati al suo account. I dati non vengono mai pubblicati sul sito." },
+    { title: "Chi vede i dati", text: "Solo Christina Back, titolare della scuola e insegnante di tutti i corsi. Ogni studente vede soltanto i propri dati; un genitore o tutore vede soltanto i dati degli studenti collegati al suo account. I dati non vengono mai pubblicati sul sito." },
     { title: "Conservazione", text: "{{TEMPI DI CONSERVAZIONE}}" },
     { title: "I tuoi diritti", text: `Puoi chiedere accesso, rettifica o cancellazione dei dati, oppure opporti al trattamento, scrivendo a ${l.privacyEmail}. Puoi anche proporre reclamo al Garante per la protezione dei dati personali.` },
     ...(t(l.privacyExtra, locale) ? [{ title: "Altre informazioni", text: t(l.privacyExtra, locale) }] : []),
@@ -44,12 +44,12 @@ export function privacySections(c: SiteContent, locale: Locale): { title: string
 export function cookieSections(locale: Locale): { title: string; text: string }[] {
   if (locale === "en") {
     return [
-      { title: "Technical cookies only", text: "The site uses only the technical cookies needed to keep you signed in to the student area or the staff area (bs_user, bs_staff). They do not track you and need no consent." },
+      { title: "Technical cookies only", text: "The site uses only the technical cookies needed to keep you signed in to the student area or the school's management area (bs_user, bs_staff). They do not track you and need no consent." },
       { title: "No analytics or advertising cookies", text: "There are no analytics, profiling or advertising cookies. Links to Amazon or social networks open external sites with their own policies." },
     ];
   }
   return [
-    { title: "Solo cookie tecnici", text: "Il sito usa soltanto i cookie tecnici necessari a mantenere l'accesso all'area studenti o all'area del personale (bs_user, bs_staff). Non ti tracciano e non richiedono consenso." },
+    { title: "Solo cookie tecnici", text: "Il sito usa soltanto i cookie tecnici necessari a mantenere l'accesso all'area studenti o all'area di gestione della scuola (bs_user, bs_staff). Non ti tracciano e non richiedono consenso." },
     { title: "Nessun cookie di statistica o pubblicità", text: "Non ci sono cookie di statistica, profilazione o pubblicità. I link ad Amazon o ai social aprono siti esterni con le loro informative." },
   ];
 }

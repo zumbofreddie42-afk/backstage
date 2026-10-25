@@ -5,6 +5,7 @@ import { AreaBar } from "@/components/area-bar";
 import { Badge, buttonClass, Card, Container, LinkButton, Notice } from "@/components/ui";
 import { formatDateTime, formatDay } from "@/lib/reminders";
 import { nowMs } from "@/lib/time";
+import { CLASSROOM_HOME } from "@/lib/usernames";
 import { t } from "@/lib/i18n";
 import { dashboardData, pickStudent, totalMinutes } from "@/server/access";
 import { requireAccount } from "@/server/auth";
@@ -95,6 +96,39 @@ export default async function AreaPage({ params, searchParams }: { params: Promi
             </div>
           ))}
         </dl>
+
+        {/* Google Classroom: where Christina keeps all the course materials. */}
+        <section aria-labelledby="classroom" className="mt-8 flex flex-col gap-5 rounded-[2rem] border-2 border-primary/30 bg-lavender p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-4">
+            <span aria-hidden="true" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary text-white">
+              <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="13" rx="2" />
+                <circle cx="12" cy="9.5" r="2" />
+                <path d="M8.5 15c.6-1.6 1.9-2.5 3.5-2.5s2.9.9 3.5 2.5M8 21h8" />
+              </svg>
+            </span>
+            <div>
+              <h2 id="classroom" className="text-xl font-extrabold text-ink">
+                {a.classroomTitle}
+              </h2>
+              <p className="mt-1 text-[0.97rem] text-ink">{student.classroomUrl || student.classroomCode ? a.classroomText : a.classroomMissing}</p>
+              {student.classroomCode && (
+                <p className="mt-2 text-sm">
+                  {a.classroomCode}: <code className="rounded-md bg-white px-2 py-0.5 font-bold text-ink">{student.classroomCode}</code>
+                  <span className="block text-muted-foreground">{a.classroomCodeHint}</span>
+                </p>
+              )}
+            </div>
+          </div>
+          <a
+            href={student.classroomUrl || CLASSROOM_HOME}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 font-semibold text-white hover:bg-primary-hover"
+          >
+            {a.classroomOpen} ↗
+          </a>
+        </section>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <Section title={a.upcoming}>

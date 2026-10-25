@@ -3,7 +3,8 @@
 Il sito è in **anteprima** (`SITE_MODE` non impostato): i segnaposto `{{COSÌ}}` sono evidenziati in viola, gli account demo funzionano e i motori di ricerca non indicizzano nulla. Quasi tutto si completa dal pannello **/staff → Contenuti del sito** (la pagina mostra quanti segnaposto restano per ogni sezione).
 
 ## Dati forniti finora (brief del 25/10/2026)
-- Nome: Backstage Online Languages; fondata e diretta da **Christina Back**.
+- Nome: Backstage Online Languages; fondata e diretta da **Christina Back**, che è l'unica persona che lavora nella scuola e insegna in tutti i corsi (25/10/2026).
+- I materiali dei corsi sono su **Google Classroom**; ogni studente ha le sue credenziali personali.
 - Oltre 25 anni di esperienza nell'insegnamento dell'inglese.
 - Quattro percorsi: Young learners 3–10, scuola media, scuola superiore, adulti 18+.
 - Viaggi studio collegati a Trinity; test d'ingresso; assistente AI per i compiti.
@@ -37,7 +38,8 @@ Il sito è in **anteprima** (`SITE_MODE` non impostato): i segnaposto `{{COSÌ}}
 
 ### Contatti e dati legali
 - [ ] Email, telefono, numero WhatsApp, indirizzo (o «lezioni online»), orari di segreteria.
-- [ ] Profili social ufficiali (link https://).
+- [ ] **Link esatti di Instagram e Facebook della scuola** (richiesti il 25/10/2026: in rete non si trovano profili ufficiali «Backstage Online Languages»; su LinkedIn la scuola compare come «Backstage English»). Si inseriscono dal pannello → Contenuti → Contatti e social.
+- [ ] Nome ufficiale da usare ovunque: «Backstage Online Languages» o «Backstage English»?
 - [ ] Titolare/ragione sociale, partita IVA, sede legale, email per la privacy.
 - [ ] Tempi di conservazione dei dati; far verificare **informativa privacy e cookie** a un consulente.
 - [ ] Accordo di trattamento dati con Supabase (database), Vercel (hosting), il fornitore dell'AI (Anthropic) e il servizio email (Resend), se usati.
@@ -45,12 +47,14 @@ Il sito è in **anteprima** (`SITE_MODE` non impostato): i segnaposto `{{COSÌ}}
 ### Pagamenti e promemoria
 - [ ] Come la scuola comunica i piani di pagamento (rate, scadenze, importi): si inseriscono a mano per ogni studente, il sito **non incassa**.
 - [ ] Quanti giorni prima della scadenza inviare il promemoria (oggi 5) e se mandarlo anche via email.
-- [ ] Chi del personale può aggiornare lo stato dei pagamenti (oggi solo l'amministrazione).
+
+### Google Classroom
+- [ ] Per ogni studente: link della classe su Classroom (ed eventuale codice del corso), da inserire nella sua scheda nel pannello.
 
 ## Prima di passare a `SITE_MODE=live`
 - [ ] Nessun segnaposto rimasto nelle sezioni pubbliche (pannello → Contenuti).
 - [ ] Progetto Supabase creato e `supabase/schema.sql` eseguito; `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY` su Vercel (vedi README, «Pubblicare su Vercel»).
-- [ ] `ADMIN_PASSWORD`, `SESSION_SECRET`, eventualmente `TEACHER_PASSWORD` impostate su Vercel.
+- [ ] `ADMIN_PASSWORD` e `SESSION_SECRET` impostate su Vercel.
 - [ ] `ANTHROPIC_API_KEY` per il tutor AI (altrimenti resta dimostrativo) e un limite di spesa sull'account.
 - [ ] `RESEND_API_KEY` + `EMAIL_FROM` se si vogliono avvisi e promemoria via email; `CRON_SECRET` per i promemoria automatici.
 - [ ] Dominio e `NEXT_PUBLIC_SITE_URL`.

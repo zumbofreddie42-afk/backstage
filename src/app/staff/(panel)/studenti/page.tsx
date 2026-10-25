@@ -21,7 +21,7 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
     .sort((a, b) => a.displayName.localeCompare(b.displayName, "it"));
 
   return (
-    <StaffPage title="Studenti" intro="Ogni studente vede solo i propri dati; i genitori o tutori solo quelli degli studenti collegati.">
+    <StaffPage title="Studenti" intro="Ogni studente ha le sue credenziali e vede solo i propri dati; i genitori o tutori solo quelli degli studenti collegati.">
       <StaffFlash message={await readFlash()} />
       <Panel>
         <form className="flex flex-wrap items-end gap-3">
@@ -76,8 +76,14 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
       </Panel>
 
       <Panel title="Nuovo studente">
-        {sp.errore && <p className="mb-3 rounded-xl bg-danger-soft p-3 font-semibold text-danger">Inserisci nome e percorso.</p>}
-        <p className="mb-4 text-sm text-muted-foreground">Basta nome e iniziale del cognome: non inserire dati che non servono.</p>
+        {sp.errore && (
+          <p className="mb-3 rounded-xl bg-danger-soft p-3 font-semibold text-danger">
+            {sp.errore === "email" ? "Email non valida." : sp.errore === "usata" ? "Questa email è già usata da un altro account." : "Inserisci nome e percorso."}
+          </p>
+        )}
+        <p className="mb-4 text-sm text-muted-foreground">
+          Basta nome e iniziale del cognome. Quando crei lo studente il sito genera subito le sue credenziali personali (nome utente e password temporanea) e te le mostra una volta sola.
+        </p>
         <form action={createStudent} className="grid gap-4 sm:grid-cols-2">
           <Field label="Nome visualizzato (es. Giulia R.)" htmlFor="displayName">
             <input id="displayName" name="displayName" required maxLength={80} className="field" />
@@ -102,11 +108,21 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
           <label className="flex items-center gap-2 self-end pb-3 font-semibold">
             <input type="checkbox" name="minor" className="h-4 w-4 accent-primary" /> Minorenne (automatico per i percorsi sotto i 18 anni)
           </label>
-          <Field label="Note interne (visibili solo al personale)" htmlFor="staffNotes" className="sm:col-span-2">
+          <Field label="Email dello studente (facoltativa)" htmlFor="email" hint="Per accedere anche con l'email e ricevere i promemoria. Per i bambini lascia vuoto.">
+            <input id="email" name="email" type="email" className="field" />
+          </Field>
+          <div />
+          <Field label="Link della classe su Google Classroom" htmlFor="classroomUrl" hint="Es. https://classroom.google.com/c/… — lo studente lo trova nella sua area.">
+            <input id="classroomUrl" name="classroomUrl" type="url" placeholder="https://classroom.google.com/c/…" className="field" />
+          </Field>
+          <Field label="Codice del corso Classroom (facoltativo)" htmlFor="classroomCode">
+            <input id="classroomCode" name="classroomCode" maxLength={40} className="field" />
+          </Field>
+          <Field label="Note interne (visibili solo a te)" htmlFor="staffNotes" className="sm:col-span-2">
             <textarea id="staffNotes" name="staffNotes" rows={2} className="field" />
           </Field>
           <div>
-            <SubmitButton>Crea studente</SubmitButton>
+            <SubmitButton>Crea studente e credenziali</SubmitButton>
           </div>
         </form>
       </Panel>

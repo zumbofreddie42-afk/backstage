@@ -34,8 +34,8 @@ export function seedContent(): SiteContent {
         en: "{{HER APPROACH TO TEACHING, in her own words}}",
       },
       role: {
-        it: "Christina Back ha fondato Backstage e la dirige. {{COSA FA OGNI GIORNO NELLA SCUOLA: lezioni, coordinamento, rapporto con le famiglie…}}",
-        en: "Christina Back founded Backstage and runs it. {{WHAT SHE DOES EVERY DAY AT THE SCHOOL: lessons, coordination, contact with families…}}",
+        it: "Christina Back ha fondato Backstage, la dirige ed è l'insegnante di tutti i corsi: segue personalmente ogni studente. {{ALTRO SU COSA FA OGNI GIORNO NELLA SCUOLA}}",
+        en: "Christina Back founded Backstage, runs it and teaches every course: she follows each student personally. {{MORE ON WHAT SHE DOES EVERY DAY AT THE SCHOOL}}",
       },
       method: {
         it: "Backstage porta in ogni percorso oltre 25 anni di esperienza nell'insegnamento dell'inglese. {{IL METODO DI LAVORO: come sono organizzate le lezioni, come si seguono i progressi, il rapporto con studenti e famiglie}}",

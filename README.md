@@ -1,6 +1,6 @@
 # Backstage Online Languages
 
-Sito della scuola di inglese di Christina Back, in italiano e inglese, con area studenti riservata, vista per genitori e tutori, **AI English Tutor** per i compiti e pannello di gestione per il personale.
+Sito della scuola di inglese di Christina Back, in italiano e inglese, con area studenti riservata, vista per genitori e tutori, **AI English Tutor** per i compiti e pannello di gestione per Christina.
 
 ## Avvio in locale
 
@@ -10,8 +10,8 @@ npm run dev
 ```
 
 - Sito: http://localhost:3000 (porta 3300 dall'anteprima di Claude) → `/it` o `/en`
-- Area studenti: `/it/area` — in anteprima: `studente@demo.backstage` o `genitore@demo.backstage`, password `demo-backstage` (dati **fittizi**)
-- Pannello del personale: `/staff` — in locale la password è `anteprima`
+- Area studenti: `/it/area` — in anteprima: `studente@demo.backstage`, `leo.r` (bambino senza email) o `genitore@demo.backstage`, password `demo-backstage` (dati **fittizi**)
+- Pannello di Christina: `/staff` — in locale la password è `anteprima`
 
 `npm run check` esegue TypeScript, ESLint, i test (Vitest) e la build: deve essere verde prima di ogni commit.
 
@@ -22,7 +22,7 @@ npm run dev
 | Home, Chi siamo, Corsi, Test d'ingresso, Viaggi studio, Risorse, Contatti, Privacy, Cookie | `src/app/[lang]/…` | Testi modificabili dal pannello; interfaccia in `src/lib/i18n/it.ts` e `en.ts` |
 | AI English Tutor | `/it/ai-tutor`, `/it/area/tutor`, API `src/app/api/tutor/route.ts` | Istruzioni di sicurezza in `src/lib/tutor/prompt.ts` |
 | Area studenti e genitori | `src/app/[lang]/area` | Regole di accesso in `src/server/access.ts` |
-| Pannello del personale | `src/app/staff` | Studenti, accessi, lezioni, progressi, appuntamenti, compiti, pagamenti, promemoria, certificazioni, richieste, contenuti |
+| Pannello di Christina | `src/app/staff` | Studenti, accessi, lezioni, progressi, appuntamenti, compiti, pagamenti, promemoria, certificazioni, richieste, contenuti |
 | Dati | `src/server/store` | Supabase se configurato (`supabase/schema.sql`), altrimenti archivio locale `.data/` (escluso da git) |
 
 ### AI English Tutor
@@ -34,9 +34,11 @@ npm run dev
 - Limiti: 60 messaggi/ora per account, 15–40 per visitatore.
 
 ### Privacy degli studenti
-- Gli account li crea solo il personale (password temporanea da cambiare al primo accesso).
+- La scuola è gestita solo da Christina Back: c'è un unico accesso al pannello (`ADMIN_PASSWORD`).
+- **Ogni studente ha le sue credenziali**: quando Christina crea uno studente il sito genera subito nome utente (es. `giulia.r`) e password temporanea, da cambiare al primo accesso. L'email è facoltativa (i bambini spesso non ce l'hanno); si entra con nome utente o email. I genitori hanno un accesso separato.
+- **Google Classroom**: tutti i materiali dei corsi sono su Classroom. Nella scheda dello studente Christina inserisce il link della classe (`https://classroom.google.com/c/…`) e, se vuole, il codice del corso; lo studente li trova in evidenza nella sua area.
 - Uno studente vede solo i propri dati; un genitore/tutore solo gli studenti collegati; i file delle certificazioni passano da `/api/files/…` con controllo di accesso.
-- I pagamenti non vengono elaborati dal sito: lo stato lo aggiorna solo l'amministrazione (`ADMIN_PASSWORD`). Il ruolo insegnante (`TEACHER_PASSWORD`) non vede i pagamenti e non modifica i contenuti.
+- I pagamenti non vengono elaborati dal sito: lo stato lo aggiorna solo Christina dal pannello.
 - I promemoria compaiono nell'area riservata e, se attivato e configurato, via email (Resend). WhatsApp/SMS non sono collegati.
 
 ## Variabili d'ambiente
@@ -44,8 +46,7 @@ npm run dev
 | Variabile | A cosa serve |
 |---|---|
 | `SITE_MODE=live` | Pubblicazione: nasconde i segnaposto, disattiva gli account demo, permette l'indicizzazione |
-| `ADMIN_PASSWORD` | Accesso amministrazione al pannello (obbligatoria in produzione) |
-| `TEACHER_PASSWORD` | Accesso insegnante (facoltativo) |
+| `ADMIN_PASSWORD` | Password del pannello di Christina (obbligatoria in produzione) |
 | `SESSION_SECRET` | Firma dei cookie di sessione (stringa lunga e casuale) |
 | `ANTHROPIC_API_KEY` | Attiva il tutor AI |
 | `TUTOR_MODEL`, `TUTOR_ACCESS` | Modello e accesso del tutor (vedi sopra) |
@@ -74,7 +75,7 @@ Si fa una volta sola, in quest'ordine.
    - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (dal punto 1.3)
    - `ADMIN_PASSWORD` (password del pannello) e `SESSION_SECRET` (stringa casuale lunga, es. 40 caratteri)
    - `CRON_SECRET` (altra stringa casuale) per i promemoria automatici
-   - facoltative: `TEACHER_PASSWORD`, `ANTHROPIC_API_KEY`, `RESEND_API_KEY` + `EMAIL_FROM`, `SCHOOL_NOTIFY_EMAIL`, `NEXT_PUBLIC_SITE_URL`
+   - facoltative: `ANTHROPIC_API_KEY`, `RESEND_API_KEY` + `EMAIL_FROM`, `SCHOOL_NOTIFY_EMAIL`, `NEXT_PUBLIC_SITE_URL`
 3. *Deploy*. Poi apri `/staff` → *Riepilogo* → «Stato dei servizi»: deve dire **Database Supabase**.
 
 Finché `SITE_MODE` non è impostata il sito resta in **anteprima**: non indicizzato, con i segnaposto evidenziati e gli account demo (che vengono salvati nel database). Con `SITE_MODE=live` (e un nuovo deploy) gli account e i dati demo vengono cancellati automaticamente.

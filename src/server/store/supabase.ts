@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { seedContent } from "@/lib/content/seed";
 import { siteContentSchema, type SiteContent } from "@/lib/content/schema";
 import { COLLECTIONS, type CollectionName, type Collections } from "@/lib/domain";
-import { demoData } from "./demo";
+import { DEMO_MARKER_ACCOUNT, demoData } from "./demo";
 import type { FileBlob, Store } from "./types";
 
 /** Calls one of the bs_* SQL functions of supabase/schema.sql. */
@@ -77,7 +77,7 @@ export class SupabaseStore implements Store {
       await this.rpc("bs_purge_demo", {});
       return;
     }
-    if (await this.rpc("bs_get", { p_collection: "accounts", p_id: "acc_demo_student" })) return;
+    if (await this.rpc("bs_get", { p_collection: "accounts", p_id: DEMO_MARKER_ACCOUNT })) return;
     const demo = demoData();
     for (const name of COLLECTIONS) {
       for (const item of demo[name] as { id: string }[]) {

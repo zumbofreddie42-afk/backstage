@@ -13,6 +13,9 @@ export type Account = {
   id: string;
   role: AccountRole;
   name: string;
+  /** Unique login name (every student has one, even without an email). */
+  username: string;
+  /** Optional: young learners often have none. Used for login and email reminders when present. */
   email: string;
   passwordHash: string;
   mustChangePassword: boolean;
@@ -35,7 +38,11 @@ export type Student = {
   level: string;
   minor: boolean;
   active: boolean;
-  /** Visible only to staff. */
+  /** Link to the student's class on Google Classroom, where all course materials are. */
+  classroomUrl?: string;
+  /** Class code to join the course on Google Classroom the first time. */
+  classroomCode?: string;
+  /** Visible only to Christina. */
   staffNotes: string;
   demo: boolean;
   createdAt: string;

@@ -10,6 +10,7 @@ const account = (patch: Partial<Account>): Account => ({
   id: "acc",
   role: "student",
   name: "Test",
+  username: "test",
   email: "t@example.com",
   passwordHash: "",
   mustChangePassword: false,
