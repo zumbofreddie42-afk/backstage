@@ -36,8 +36,15 @@ export function tutorModel(): string {
   return process.env.TUTOR_MODEL?.trim() || "claude-opus-5-5";
 }
 
-export type StoreKind = "memory" | "local";
+export type StoreKind = "memory" | "local" | "supabase";
 
+/** Supabase when its URL and service-role key are set (always on Vercel); otherwise local files. */
 export function getStoreKind(): StoreKind {
-  return process.env.BACKSTAGE_STORE === "memory" ? "memory" : "local";
+  const forced = process.env.BACKSTAGE_STORE;
+  if (forced === "memory" || forced === "local" || forced === "supabase") return forced;
+  return process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY ? "supabase" : "local";
+}
+
+export function isDatabaseConfigured(): boolean {
+  return getStoreKind() === "supabase";
 }

@@ -1,6 +1,7 @@
 import "server-only";
 
-export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+// Vercel accepts request bodies up to 4.5 MB, so files are capped at 4 MB.
+export const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
 
 const SIGNATURES: { type: string; ext: string; check: (b: Uint8Array) => boolean }[] = [
   { type: "application/pdf", ext: "pdf", check: (b) => b[0] === 0x25 && b[1] === 0x50 && b[2] === 0x44 && b[3] === 0x46 },

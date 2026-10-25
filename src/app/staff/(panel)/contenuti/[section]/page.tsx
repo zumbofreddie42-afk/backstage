@@ -88,7 +88,7 @@ export default async function SectionEditor({ params, searchParams }: { params: 
       <StaffFlash message={await readFlash()} />
       {errore && (
         <p role="alert" className="rounded-xl bg-danger-soft p-3 font-semibold text-danger">
-          {errore === "foto" ? "La foto deve essere JPG, PNG o WebP e pesare al massimo 5 MB." : "Non è stato possibile salvare: controlla i campi."}
+          {errore === "foto" ? "La foto deve essere JPG, PNG o WebP e pesare al massimo 4 MB." : "Non è stato possibile salvare: controlla i campi."}
         </p>
       )}
 
@@ -103,7 +103,7 @@ export default async function SectionEditor({ params, searchParams }: { params: 
               ) : (
                 <p className="text-sm text-muted-foreground">Nessuna foto caricata.</p>
               )}
-              <Field label="Nuova foto (JPG, PNG o WebP, max 5 MB)" htmlFor="portrait-file">
+              <Field label="Nuova foto (JPG, PNG o WebP, max 4 MB)" htmlFor="portrait-file">
                 <input id="portrait-file" name="photo" type="file" accept="image/jpeg,image/png,image/webp" required className="text-sm" />
               </Field>
               <SubmitButton small>Carica ritratto</SubmitButton>

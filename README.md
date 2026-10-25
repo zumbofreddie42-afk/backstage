@@ -23,7 +23,7 @@ npm run dev
 | AI English Tutor | `/it/ai-tutor`, `/it/area/tutor`, API `src/app/api/tutor/route.ts` | Istruzioni di sicurezza in `src/lib/tutor/prompt.ts` |
 | Area studenti e genitori | `src/app/[lang]/area` | Regole di accesso in `src/server/access.ts` |
 | Pannello del personale | `src/app/staff` | Studenti, accessi, lezioni, progressi, appuntamenti, compiti, pagamenti, promemoria, certificazioni, richieste, contenuti |
-| Dati | `src/server/store` | Oggi archivio locale (`.data/`, escluso da git) |
+| Dati | `src/server/store` | Supabase se configurato (`supabase/schema.sql`), altrimenti archivio locale `.data/` (escluso da git) |
 
 ### AI English Tutor
 - **Dimostrativo** senza `ANTHROPIC_API_KEY`: risposte di esempio preparate, segnalate come tali.
@@ -53,8 +53,39 @@ npm run dev
 | `SCHOOL_NOTIFY_EMAIL` | Dove avvisare delle nuove richieste (altrimenti l'email dei contatti) |
 | `CRON_SECRET` | Protegge `/api/cron/reminders` (Vercel Cron, tutti i giorni alle 7 UTC: `vercel.json`) |
 | `NEXT_PUBLIC_SITE_URL` | Indirizzo pubblico del sito |
+| `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Database e file (obbligatori su Vercel). La chiave service_role è segreta: solo su Vercel, mai nel codice |
 
-## Prima della pubblicazione
+## Pubblicare su Vercel con Supabase
+
+Si fa una volta sola, in quest'ordine.
+
+**1. Supabase (database e file)**
+1. Su [supabase.com](https://supabase.com) → *New project* (regione **Europe**, es. Frankfurt). Annota la password del database.
+2. Menu *SQL Editor* → *New query* → incolla tutto il file `supabase/schema.sql` → *Run*. Crea tabelle, regole di sicurezza e i due spazi file privati.
+3. *Project Settings → API*: copia **Project URL** e la chiave **service_role** (segreta).
+
+**2. GitHub**
+1. Crea un repository **privato** `backstage` (account `zumbofreddie42-afk`, come gli altri progetti).
+2. Dalla cartella del progetto: `git remote add origin https://github.com/zumbofreddie42-afk/backstage.git` e poi `git push -u origin main` (dal terminale interattivo, per il login).
+
+**3. Vercel**
+1. *Add New → Project* → importa il repository `backstage` (Framework: Next.js, impostazioni predefinite).
+2. Prima di *Deploy*, in *Environment Variables* aggiungi almeno:
+   - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (dal punto 1.3)
+   - `ADMIN_PASSWORD` (password del pannello) e `SESSION_SECRET` (stringa casuale lunga, es. 40 caratteri)
+   - `CRON_SECRET` (altra stringa casuale) per i promemoria automatici
+   - facoltative: `TEACHER_PASSWORD`, `ANTHROPIC_API_KEY`, `RESEND_API_KEY` + `EMAIL_FROM`, `SCHOOL_NOTIFY_EMAIL`, `NEXT_PUBLIC_SITE_URL`
+3. *Deploy*. Poi apri `/staff` → *Riepilogo* → «Stato dei servizi»: deve dire **Database Supabase**.
+
+Finché `SITE_MODE` non è impostata il sito resta in **anteprima**: non indicizzato, con i segnaposto evidenziati e gli account demo (che vengono salvati nel database). Con `SITE_MODE=live` (e un nuovo deploy) gli account e i dati demo vengono cancellati automaticamente.
+
+### Note
+- Ogni modifica salvata dal pannello aggiorna subito le pagine pubbliche.
+- I file caricati (foto e certificazioni) arrivano al massimo a 4 MB, il limite di Vercel.
+- Il limite di tentativi su accessi e moduli è per singola istanza del server: protegge dagli abusi casuali, non da attacchi mirati.
+- Backup: Supabase li fa in automatico sui piani a pagamento; sul piano gratuito conviene esportare i dati ogni tanto (*Database → Backups* o `pg_dump`).
+
+## Prima della pubblicazione definitiva (`SITE_MODE=live`)
 1. Completare quanto elencato in `DA-CONFERMARE.md`.
-2. **Database**: l'archivio attuale tiene i dati in memoria e in `.data/` — va bene in locale, ma su Vercel i dati non restano salvati. Serve collegare un database (es. Supabase, come per gli altri progetti) implementando l'interfaccia `Store` in `src/server/store/types.ts`, con file privati per le certificazioni.
-3. Impostare le variabili d'ambiente e poi `SITE_MODE=live`.
+2. Controllare che in *Contenuti del sito* non restino segnaposto.
+3. Impostare `SITE_MODE=live` su Vercel e rifare il deploy.

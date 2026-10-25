@@ -1,6 +1,7 @@
 import "server-only";
 import { getSiteMode, getStoreKind } from "@/server/config";
 import { LocalStore } from "./local";
+import { SupabaseStore } from "./supabase";
 import type { Store } from "./types";
 
 export type { Store } from "./types";
@@ -10,7 +11,12 @@ const globalForStore = globalThis as unknown as { __backstageStore?: Store };
 
 export function getStore(): Store {
   if (!globalForStore.__backstageStore) {
-    globalForStore.__backstageStore = new LocalStore(getStoreKind() === "local", getSiteMode() === "preview");
+    const kind = getStoreKind();
+    const withDemo = getSiteMode() === "preview";
+    globalForStore.__backstageStore =
+      kind === "supabase"
+        ? SupabaseStore.fromEnv(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, withDemo)
+        : new LocalStore(kind === "local", withDemo);
   }
   return globalForStore.__backstageStore;
 }

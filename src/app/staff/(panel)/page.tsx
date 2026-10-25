@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui";
 import { formatDateTime, formatDay } from "@/lib/reminders";
 import { nowMs } from "@/lib/time";
 import { requireStaff } from "@/server/auth";
-import { isEmailConfigured, isTutorLive, getSiteMode } from "@/server/config";
+import { getSiteMode, isDatabaseConfigured, isEmailConfigured, isTutorLive } from "@/server/config";
 import { runReminders } from "@/server/reminders";
 import { getStore } from "@/server/store";
 
@@ -117,7 +117,14 @@ export default async function StaffHome({ searchParams }: { searchParams: Promis
               Email (promemoria e avvisi): {isEmailConfigured() ? <Badge tone="ok">Attive</Badge> : <Badge tone="warn">Non configurate (RESEND_API_KEY)</Badge>}
             </li>
             <li>
-              Archivio dati: <Badge tone="warn">Locale / demo</Badge> <span className="text-sm text-muted-foreground">— serve un database prima della pubblicazione (vedi README).</span>
+              Archivio dati:{" "}
+              {isDatabaseConfigured() ? (
+                <Badge tone="ok">Database Supabase</Badge>
+              ) : (
+                <>
+                  <Badge tone="warn">Locale</Badge> <span className="text-sm text-muted-foreground">— su Vercel serve Supabase (vedi README).</span>
+                </>
+              )}
             </li>
           </ul>
         </Panel>

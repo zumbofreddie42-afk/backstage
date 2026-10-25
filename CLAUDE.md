@@ -16,3 +16,4 @@ Sito per un cliente del titolare di OneLink (principiante): rispondigli **in ita
 - Anteprima: configurazione «backstage» nel `.claude/launch.json` di OneLink (porta 3300).
 - Se cambi i dati iniziali o demo aumenta `SEED_VERSION` in `src/server/store/local.ts`.
 - Privacy: ogni accesso ai dati degli studenti passa da `src/server/access.ts`.
+- Dati: Supabase in produzione (`supabase/schema.sql`, solo funzioni `bs_*` con chiave service_role; test con PGlite in `tests/supabase.test.ts`), archivio locale `.data/` in sviluppo. Se cambi lo schema, deve restare rieseguibile senza perdere dati.

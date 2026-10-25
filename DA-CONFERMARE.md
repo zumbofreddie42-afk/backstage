@@ -40,7 +40,7 @@ Il sito è in **anteprima** (`SITE_MODE` non impostato): i segnaposto `{{COSÌ}}
 - [ ] Profili social ufficiali (link https://).
 - [ ] Titolare/ragione sociale, partita IVA, sede legale, email per la privacy.
 - [ ] Tempi di conservazione dei dati; far verificare **informativa privacy e cookie** a un consulente.
-- [ ] Accordo di trattamento dati con il fornitore dell'AI (Anthropic) e con il servizio email (Resend), se usati.
+- [ ] Accordo di trattamento dati con Supabase (database), Vercel (hosting), il fornitore dell'AI (Anthropic) e il servizio email (Resend), se usati.
 
 ### Pagamenti e promemoria
 - [ ] Come la scuola comunica i piani di pagamento (rate, scadenze, importi): si inseriscono a mano per ogni studente, il sito **non incassa**.
@@ -49,7 +49,7 @@ Il sito è in **anteprima** (`SITE_MODE` non impostato): i segnaposto `{{COSÌ}}
 
 ## Prima di passare a `SITE_MODE=live`
 - [ ] Nessun segnaposto rimasto nelle sezioni pubbliche (pannello → Contenuti).
-- [ ] Database vero al posto dell'archivio locale (vedi README, «Prima della pubblicazione»).
+- [ ] Progetto Supabase creato e `supabase/schema.sql` eseguito; `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY` su Vercel (vedi README, «Pubblicare su Vercel»).
 - [ ] `ADMIN_PASSWORD`, `SESSION_SECRET`, eventualmente `TEACHER_PASSWORD` impostate su Vercel.
 - [ ] `ANTHROPIC_API_KEY` per il tutor AI (altrimenti resta dimostrativo) e un limite di spesa sull'account.
 - [ ] `RESEND_API_KEY` + `EMAIL_FROM` se si vogliono avvisi e promemoria via email; `CRON_SECRET` per i promemoria automatici.
