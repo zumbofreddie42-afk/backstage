@@ -1,4 +1,4 @@
--- Backstage Online Languages: database su Supabase.
+-- Backstage Languages: database su Supabase.
 -- Da eseguire una volta in Supabase → SQL Editor (si può rieseguire senza perdere dati).
 --
 -- Solo il server del sito accede ai dati, con la chiave service_role: RLS è attiva senza regole e le

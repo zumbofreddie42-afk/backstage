@@ -15,7 +15,6 @@ export function whatsappHref(number: string): string | null {
 
 const SOCIALS: { key: keyof Contact; name: string }[] = [
   { key: "instagram", name: "Instagram" },
-  { key: "facebook", name: "Facebook" },
   { key: "youtube", name: "YouTube" },
   { key: "tiktok", name: "TikTok" },
   { key: "linkedin", name: "LinkedIn" },

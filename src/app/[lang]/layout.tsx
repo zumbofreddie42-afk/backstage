@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const preview = getSiteMode() === "preview";
   return {
     metadataBase: new URL(getSiteUrl()),
-    title: { default: d.meta.defaultTitle, template: `%s · Backstage Online Languages` },
+    title: { default: d.meta.defaultTitle, template: `%s · Backstage Languages` },
     description: d.meta.description,
     applicationName: d.meta.siteName,
     openGraph: { type: "website", siteName: d.meta.siteName, locale: d.meta.ogLocale, description: d.meta.description },

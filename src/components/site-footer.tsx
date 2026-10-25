@@ -34,7 +34,7 @@ export function SiteFooter({ site }: { site: Site }) {
 
         <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="font-display text-xl font-extrabold">Backstage Online Languages</p>
+            <p className="font-display text-xl font-extrabold">Backstage Languages</p>
             <p className="mt-2 text-ink-muted">{d.footer.tagline}</p>
           </div>
           <div>

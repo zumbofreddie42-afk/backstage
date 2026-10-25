@@ -1,10 +1,10 @@
 // Italian UI strings. `en.ts` must have exactly the same shape (checked by the type and by a test).
 export const it = {
   meta: {
-    siteName: "Backstage Online Languages",
-    defaultTitle: "Backstage Online Languages · Scuola di inglese",
+    siteName: "Backstage Languages",
+    defaultTitle: "Backstage Languages · Scuola di inglese",
     description:
-      "Corsi di inglese per bambini, ragazzi e adulti con Backstage Online Languages, la scuola fondata e diretta da Christina Back: oltre 25 anni di esperienza nell'insegnamento.",
+      "Corsi di inglese per bambini, ragazzi e adulti con Backstage Languages, la scuola fondata e diretta da Christina Back: oltre 25 anni di esperienza nell'insegnamento.",
     langName: "Italiano",
     ogLocale: "it_IT",
   },
@@ -61,7 +61,7 @@ export const it = {
   },
   about: {
     title: "Chi siamo",
-    intro: "Backstage Online Languages è la scuola di inglese fondata e diretta da Christina Back.",
+    intro: "Backstage Languages è la scuola di inglese fondata e diretta da Christina Back.",
     christinaEyebrow: "Fondatrice e direttrice",
     storyTitle: "La sua storia",
     approachTitle: "Il suo approccio all'insegnamento",

@@ -187,7 +187,6 @@ export const SECTIONS: SectionDef[] = [
       { key: "contact.address", label: "Indirizzo (o «Lezioni online»)", kind: "l" },
       { key: "contact.hours", label: "Orari", kind: "l" },
       { key: "contact.instagram", label: "Instagram (https://…)", kind: "url" },
-      { key: "contact.facebook", label: "Facebook (https://…)", kind: "url" },
       { key: "contact.youtube", label: "YouTube (https://…)", kind: "url" },
       { key: "contact.tiktok", label: "TikTok (https://…)", kind: "url" },
       { key: "contact.linkedin", label: "LinkedIn (https://…)", kind: "url" },

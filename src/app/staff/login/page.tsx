@@ -22,7 +22,7 @@ export default async function StaffLoginPage({ searchParams }: { searchParams: P
   return (
     <main className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-ink to-primary px-4">
       <form action={login} className="w-full max-w-sm rounded-[2rem] bg-white p-7">
-        <Image src="/brand/backstage-logo.jpg" alt="Backstage Online Languages" width={150} height={150} className="h-16 w-16 rounded-full" />
+        <Image src="/brand/backstage-logo.jpg" alt="Backstage Languages" width={150} height={150} className="h-16 w-16 rounded-full" />
         <h1 className="mt-4 text-3xl font-extrabold text-ink">Area di Christina</h1>
         <p className="mt-1 text-muted-foreground">Pannello di gestione di Backstage</p>
         {errore && (

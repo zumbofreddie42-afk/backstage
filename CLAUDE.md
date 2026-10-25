@@ -1,11 +1,12 @@
-# Backstage Online Languages — istruzioni per Claude
+# Backstage Languages — istruzioni per Claude
 
 Sito per un cliente del titolare di OneLink (principiante): rispondigli **in italiano**, in modo semplice e breve. Progetto separato da OneLink (i dati del cliente non vanno nel repository OneLink).
 
 ## Regole di contenuto
 - **Christina Back è l'unica persona che lavora nella scuola** (titolare e insegnante di tutti i corsi): niente «personale», «staff» o «insegnanti» al plurale nei testi; un solo accesso al pannello.
 - Ogni studente ha credenziali proprie (nome utente obbligatorio, email facoltativa); i materiali dei corsi sono su Google Classroom (link per studente).
-- Social: usare solo i link ufficiali forniti dalla scuola (Instagram e Facebook richiesti, non ancora ricevuti).
+- Nome ufficiale: **Backstage Languages** (non «Online Languages», non «Backstage English»).
+- Social: solo Instagram https://www.instagram.com/backstage_languages/ — **niente Facebook**.
 - Testi pubblici in italiano **e** inglese (stessa struttura: `src/lib/i18n/it.ts` ed `en.ts`, verificata da un test); si dà del "tu". Codice, test e commenti in inglese.
 - **Non inventare** recensioni, titoli o qualifiche di Christina Back, certificazioni, partner, località, date, prezzi, recapiti, social o dati legali: usa segnaposto `{{COSÌ}}`. Fatti forniti: vedi `src/lib/content/seed.ts` e `DA-CONFERMARE.md`.
 - Nessun prezzo nel sito pubblico: si invita a contattare la scuola. Il sito non elabora pagamenti; lo stato lo cambia solo l'amministrazione.

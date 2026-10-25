@@ -1,7 +1,7 @@
 import type { SiteContent } from "./schema";
 
 /**
- * Starting content. Facts provided by the school (2026-10-25 brief): name "Backstage Online Languages",
+ * Starting content. Facts provided by the school (2026-10-25 brief): name "Backstage Languages" (renamed 2026-10-25), Instagram @backstage_languages,
  * founded and run by Christina Back, over 25 years of experience in teaching English, four age paths,
  * study trips linked to Trinity, AI homework assistant. Everything else is a {{PLACEHOLDER}} that the
  * school fills in from the staff panel (see DA-CONFERMARE.md). Bump SEED_VERSION in
@@ -19,8 +19,8 @@ export function seedContent(): SiteContent {
         en: "English courses for children, teenagers and adults, with a path designed for every age and for your goals.",
       },
       intro: {
-        it: "Backstage Online Languages è la scuola di inglese fondata e diretta da Christina Back. Con oltre 25 anni di esperienza nell'insegnamento dell'inglese, accompagniamo bambini, ragazzi e adulti in percorsi su misura, con attenzione alla persona e ai suoi obiettivi.",
-        en: "Backstage Online Languages is the English school founded and run by Christina Back. With over 25 years of experience in teaching English, we guide children, teenagers and adults through tailored paths, paying attention to each person and their goals.",
+        it: "Backstage Languages è la scuola di inglese fondata e diretta da Christina Back. Con oltre 25 anni di esperienza nell'insegnamento dell'inglese, accompagniamo bambini, ragazzi e adulti in percorsi su misura, con attenzione alla persona e ai suoi obiettivi.",
+        en: "Backstage Languages is the English school founded and run by Christina Back. With over 25 years of experience in teaching English, we guide children, teenagers and adults through tailored paths, paying attention to each person and their goals.",
       },
       years: "25+",
     },
@@ -183,8 +183,7 @@ export function seedContent(): SiteContent {
       whatsapp: "",
       address: { it: "{{INDIRIZZO O \"Lezioni online\"}}", en: "{{ADDRESS OR \"Online lessons\"}}" },
       hours: { it: "{{ORARI DI SEGRETERIA}}", en: "{{OFFICE HOURS}}" },
-      instagram: "",
-      facebook: "",
+      instagram: "https://www.instagram.com/backstage_languages/",
       youtube: "",
       tiktok: "",
       linkedin: "",

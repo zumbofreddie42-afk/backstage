@@ -15,7 +15,7 @@ export function Logo({ locale, name }: { locale: Locale; name: string }) {
       <Image src="/brand/backstage-logo.jpg" alt="" width={150} height={150} priority className="h-12 w-12 rounded-full" />
       <span className="hidden font-display text-[1.02rem] font-extrabold leading-tight text-ink sm:block">
         Backstage
-        <span className="block text-xs font-semibold tracking-wide text-magenta-strong">Online Languages</span>
+        <span className="block text-xs font-semibold tracking-wide text-magenta-strong">Languages</span>
       </span>
     </Link>
   );

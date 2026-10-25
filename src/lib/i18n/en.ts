@@ -2,10 +2,10 @@ import type { it } from "./it";
 
 export const en: typeof it = {
   meta: {
-    siteName: "Backstage Online Languages",
-    defaultTitle: "Backstage Online Languages · English school",
+    siteName: "Backstage Languages",
+    defaultTitle: "Backstage Languages · English school",
     description:
-      "English courses for children, teenagers and adults with Backstage Online Languages, the school founded and run by Christina Back: over 25 years of experience in teaching English.",
+      "English courses for children, teenagers and adults with Backstage Languages, the school founded and run by Christina Back: over 25 years of experience in teaching English.",
     langName: "English",
     ogLocale: "en_GB",
   },
@@ -62,7 +62,7 @@ export const en: typeof it = {
   },
   about: {
     title: "About us",
-    intro: "Backstage Online Languages is the English school founded and run by Christina Back.",
+    intro: "Backstage Languages is the English school founded and run by Christina Back.",
     christinaEyebrow: "Founder and director",
     storyTitle: "Her story",
     approachTitle: "Her approach to teaching",

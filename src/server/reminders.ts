@@ -34,7 +34,7 @@ export async function runReminders(now = new Date()): Promise<{ created: number;
       for (const a of accounts) {
         const ok = await sendEmail({
           to: a.email,
-          subject: "Promemoria da Backstage Online Languages",
+          subject: "Promemoria da Backstage Languages",
           text: `${r.message}\n\nTrovi i dettagli nella tua area riservata.`,
         });
         log.push(`email ${a.email}: ${ok ? "inviata" : "non inviata"}`);

@@ -16,7 +16,7 @@ import type { FileBlob, Store } from "./types";
  * Bump SEED_VERSION when src/lib/content/seed.ts or the demo data change: the stored content is
  * reset to the new seed (private records are kept).
  */
-export const SEED_VERSION = 3;
+export const SEED_VERSION = 4;
 
 type Records = { [K in CollectionName]: Collections[K][] };
 type FileShape = { seedVersion: number; content: SiteContent; records: Records };

@@ -114,7 +114,6 @@ export const siteContentSchema = z.object({
     address: lSchema,
     hours: lSchema,
     instagram: url,
-    facebook: url,
     youtube: url,
     tiktok: url,
     linkedin: url,

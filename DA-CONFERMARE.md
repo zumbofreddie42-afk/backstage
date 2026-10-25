@@ -1,9 +1,9 @@
-# Backstage Online Languages — cosa manca prima di pubblicare
+# Backstage Languages — cosa manca prima di pubblicare
 
 Il sito è in **anteprima** (`SITE_MODE` non impostato): i segnaposto `{{COSÌ}}` sono evidenziati in viola, gli account demo funzionano e i motori di ricerca non indicizzano nulla. Quasi tutto si completa dal pannello **/staff → Contenuti del sito** (la pagina mostra quanti segnaposto restano per ogni sezione).
 
 ## Dati forniti finora (brief del 25/10/2026)
-- Nome: Backstage Online Languages; fondata e diretta da **Christina Back**, che è l'unica persona che lavora nella scuola e insegna in tutti i corsi (25/10/2026).
+- Nome: **Backstage Languages** (confermato il 25/10/2026); fondata e diretta da **Christina Back**, che è l'unica persona che lavora nella scuola e insegna in tutti i corsi (25/10/2026).
 - I materiali dei corsi sono su **Google Classroom**; ogni studente ha le sue credenziali personali.
 - Oltre 25 anni di esperienza nell'insegnamento dell'inglese.
 - Quattro percorsi: Young learners 3–10, scuola media, scuola superiore, adulti 18+.
@@ -12,6 +12,7 @@ Il sito è in **anteprima** (`SITE_MODE` non impostato): i segnaposto `{{COSÌ}}
 
 ## Da chiedere alla scuola
 ### Identità e grafica
+- [ ] Il logo ricevuto riporta ancora la scritta «Online Languages»: serve il logo aggiornato con il nome «Backstage Languages» (il sito non modifica il logo originale).
 - [ ] **Logo in alta risoluzione** (PNG con sfondo trasparente o SVG): quello ricevuto è 150×150 px e va bene solo per icone piccole.
 - [ ] Foto autentiche (ritratto di Christina, lezioni, attività) con il **consenso delle persone ritratte** — per i minori serve il consenso dei genitori.
 
@@ -37,9 +38,8 @@ Il sito è in **anteprima** (`SITE_MODE` non impostato): i segnaposto `{{COSÌ}}
 - [ ] Solo recensioni autentiche con autorizzazione scritta a pubblicarle. Finché non ci sono la sezione non compare.
 
 ### Contatti e dati legali
+- [x] Instagram: https://www.instagram.com/backstage_languages/ (Facebook: non va collegato).
 - [ ] Email, telefono, numero WhatsApp, indirizzo (o «lezioni online»), orari di segreteria.
-- [ ] **Link esatti di Instagram e Facebook della scuola** (richiesti il 25/10/2026: in rete non si trovano profili ufficiali «Backstage Online Languages»; su LinkedIn la scuola compare come «Backstage English»). Si inseriscono dal pannello → Contenuti → Contatti e social.
-- [ ] Nome ufficiale da usare ovunque: «Backstage Online Languages» o «Backstage English»?
 - [ ] Titolare/ragione sociale, partita IVA, sede legale, email per la privacy.
 - [ ] Tempi di conservazione dei dati; far verificare **informativa privacy e cookie** a un consulente.
 - [ ] Accordo di trattamento dati con Supabase (database), Vercel (hosting), il fornitore dell'AI (Anthropic) e il servizio email (Resend), se usati.
