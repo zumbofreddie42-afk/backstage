@@ -1,0 +1,25 @@
+# dependencies
+node_modules
+
+# next.js
+.next
+out
+next-env.d.ts
+
+# env files - NEVER commit real secrets
+.env
+.env.local
+.env.*.local
+.env.production
+
+# local demo data written by the local store
+.data
+
+# misc
+*.tsbuildinfo
+.DS_Store
+coverage
+.vercel
+
+# Claude Code (locale)
+.claude/
